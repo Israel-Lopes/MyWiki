@@ -258,3 +258,22 @@ Ferramenta exelente para injecao de pacotes e o **packit**.
 ### Modelo OSI
 
 ![modelo_osi](img/modelo_osi.png)
+
+  - Ele possui 7 camadas.
+  - Cada uma das camadas tem PDU
+  - Fisica manipula bits.
+  - Enlace manipula quadros ou frames.
+  - Rede pacotes ou datagramas
+  - Transporte manipula seguimentos.
+  - Sessao onde e relazado sessao das aplicacoes.
+
+<br />
+
+![modelo_osi_simplificado](img/modelo_osi_simplificado.png)
+  - Modelo OSI simplificado
+
+<br />
+
+![modelo_osi_encapsulado](img/modelo_osi_encapsulado.png)
+  - O modelo OSI, na pratica, e uma referencia ao encapsulamento de dados e protocolos, com niveis de preparacao e controle.
+  - Um exemplo, utilizando o protocolo HTTP como aplicacao.
