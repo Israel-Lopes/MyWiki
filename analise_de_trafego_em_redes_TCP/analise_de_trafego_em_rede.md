@@ -174,7 +174,87 @@ Sao tres metodos de difucao de dados, sao eles:
     - Os dois podem falar, mas cada um no seu tempo, ex: radio de comunicao militar e nextel.
   - **Full-duplex**
     - Os dois podem falar a o mesmo tempo ex: telefone.
-    
-**Com isso, agoras sabemos que o tcp e um protocolo full-duplex.**
 
-2:40:50
+Primeira coisa que um servidor faz e testar a conexao. Servidor vai disser Syn, e o cliente responde Ack. Agora o cliente tenque testar a conexao dele ate o servidor, cliente diz Syn, servidor responde Ack. Veja exemplo:
+
+   C/S     |   C/S    | Flags
+-----------|----------|------
+Cliente    | Servidor | [SYN]
+Servidor   | Cliente  | [ACK]
+Servidor   | Cliente  | [SYN]
+Cliente    | Servidor | [ACK]
+
+<br />
+
+O protocolo http se encontra dentro do tcp, por isso ele entra pela porta 80, pois a porta 80 e porta do tcp. O protocolo http e o push do tcp. Processo de payload se se monta da seguinte forma.
+
+Cliente responde [Psh], aqui ele pede o index para o servidor.
+
+Servidor respode [Ack], em seguida o servidor respode com [Psh] que e o index da pagina.
+
+Quando cliente recebe o [Psh] ele responde com um [Ack]. Caso a pagina seja muito grande o servidor ira enviar outro [Psh] , cliente responde [Ack], ate que pagina esteja completa.
+
+Quando chega a o final tanto o cliente tanto servidor pode finalizar a conexao, sendo assim servidor responderia [Fin], cliente responde [Ack]. 
+Aqui fechou o canol do servidor para cliente. 
+
+Agora falta fechar do cliente para servidor. Entao cliente responde [Fin], servidor respode [Ack].
+
+![http_dentro_do_tcp](img/http_dentro_do_tcp.png)
+
+
+O ip nessa figura, que e o encapsulamento e igual uma encomenda dos correios. Voce nao ve o que esta dentro apenas fora, fora e o ip. Entao quando pacote chega, ele chega como ip. Voce abre ele, descarta o ip e surge um tcp de dentro do ip. O tcp nao enxerga o ip apenas as portas, nessa caso a porta 80.
+
+<br />
+
+### Utilizando telnet com tcpdump
+
+Utilizando o telnet para fazer conexao tcp e usuando tcpdump para monitorar a conexao.
+
+`root@terminal:~# tcpdump -ni lo port 80`
+![tcpdump_port](img/tcpdump_port.png)
+  - aqui tcpdump esta monitorando a porta 80
+
+`root@terminal:~# telnet 127.0.0.5 80`
+
+![telnet_conect](img/telnet_conect.png)
+  - aqui telnet inicia uma conexao na porta 80. Apartir dai o tcpdump comeca sua captura de trafego de rede. Exemplo a baixo:
+![tcpdump_captura](img/tcpdump_captura.png)
+
+Analisabdo conteudo em ascii2
+
+`root@terminal:~# tcpdum -nr arquivo.pcap -A | less`
+![payload_ascii](img/payload_ascii.png)
+  - aqui e pessivel ver detalhas do payload, ex:
+    - navegador Mozila firefox apartir de um ambiente grafico x11.
+    - sistema operacional linux
+
+Obs: Exelente programa para fazer extracao de png e o **tcpxtract**.
+
+<br />
+
+### UDP
+
+![udp_protocolo](img/udp_protocolo.png)
+
+  - UDP nao e orientado a conexao e tem 32 bits de lagura.
+  - checksum do UDP e opcional.
+  - udp nao tem flags.
+  - netcat e utilizado para conexao upd e tcp.
+  
+Ferramenta exelente para injecao de pacotes e o **packit**.
+
+<br />
+
+### ICMP
+
+![cimp](img/icmp.png)
+  - Ele e essencial para controle dos procolos ip com execao do tcp que se auto controla.
+  - e utilizado para controlar as atividades de rede.
+  - Nao se bloqueia ICMP em redes! Isso nao cria seguranca e sem descontrole. O correto e controlar o ICMP pelo sistema de firewall.
+  - Sistemas de firewall sao compostos por diversos elementos  como filtros de pacotes, proxies, IDS, IPS, verificadores de rede integridades etc. Firewall nao controlam somente TCP e UDP.
+  
+<br />
+
+### Modelo OSI
+
+![modelo_osi](img/modelo_osi.png)
