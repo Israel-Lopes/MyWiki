@@ -8,8 +8,6 @@ RFC sao documentos que regulam o funcionamento da internet.
   - [orgão responsavel pela homolocação da RFC](https://www.ietf.org)
   - Auxilio  para testes e estudo: simulador de redes CORE.
 
-![simulador de rede](img/simulador_de_rede_core.png)
-
 <br />
 
 ### Estrutura de um protocolo
@@ -277,3 +275,110 @@ Ferramenta exelente para injecao de pacotes e o **packit**.
 ![modelo_osi_encapsulado](img/modelo_osi_encapsulado.png)
   - O modelo OSI, na pratica, e uma referencia ao encapsulamento de dados e protocolos, com niveis de preparacao e controle.
   - Um exemplo, utilizando o protocolo HTTP como aplicacao.
+
+<br />
+
+### Core
+
+  - Core (Common Open Reserch Emulator) pode ser instalado diretamente no seu computador. No entando, ele tambem pode ser ativado rapidamente via Docker.
+
+instalando docker:
+
+![instalando_docker](img/instalando_docker.png)
+
+<br />
+
+![simulador de rede](img/simulador_de_rede_core.png)
+
+<br />
+
+### Fluxo TCP
+
+  - Demonstracao de situacao de bloqueio de porta.
+  - Demonstracao de fluxo simples.
+  - Demonstracao de fluxo em trafego anomalo.
+
+Bloqueando a porta 81 com **iptables**.
+
+`root@terminal:~# iptables -A INPUT -p tcp --dport 81 -j DROP`
+
+  - Quando se conecta em uma porta bloqueada, ex com telnet, nao avera reset, ira ocorrer conenction time aut.
+
+Existem dois tipos de retrasmicao no **tcp**.
+  - Restransmicao rapida que se chama **fast for-ward**.
+    - A restransmicao rapida e feita por tempo que leva 1 segundo. Com isso e mandando o seguimento, se em 1 seguindo nao tiver resposta e remando o seguimento, redobra o tempo ate dar time out. Normalmente o seguimento e reenviado de 5 a 6 vezes dependendo do kernel do sistema.
+  - Retransmicao a pedido. quando vem um **Ack** do lado oposto pedindo que seja restransmitido o seguimento com numero de sequencia.
+
+[Fluxo simples], e o fluxo que nao tem nada de errado acontecendo com ele.
+
+Gravando fluxo
+
+`root@terminal:~# tcpdump -ni lo -v -w fluxo.pcap`
+
+Agora fazendo telnet na porta 80, para tcpdump capturar o fluxo.
+
+`root@terminal:~# telnet 127.0.0.5 80`
+
+em seguida fazer `GET /`.
+
+`root@terminal:~# tcpdump -n -r fluxo.pcap -S`
+
+  - A opcao "-S" e para ver o numero de sequencia absoluto, que sera importante para a analise.
+
+![captura_trafego](img/captura_trafego.png)
+
+  - Temos o nosso cliente 127.0.0.1 eo servidor 127.0.0.5, aqui como ja sabemos eo ip do cliente que vem primeiro pois foi ele quem iniciou a conexao. Entao cliente diz ao servidor um [S] e que o numero de sequencia e 267556**2909**.
+  - Servidor responde para cliente [S.] seq 267556**2910**. Aqui ele encrementou o sumero de sequencia.
+  - A proxima vez que o cliente enviar alguma coisa para o servidor o numero de sequencia tem que ser o 267556**2910**.
+  - Na terceira linha, o cliente responde com um Ack [.], lebrando que Ack nao tem numero de sequencia.
+  - Na quarta linha cliente envia um push Ack [P.] enviando um GET /. Push tem numero de sequencia, que aqui e 267556**2910**. O tamanho do payload e 7 "length 7" entao 7+2010 = **2917**, ficando 267556**2917**, esse calculo e uma deducao matematica. Entao proxima vez que o cliente for enviar algo sera com **2917**.
+  - Na quinta linha o servidor responde [.], ack 267556**2910**
+    - Aqui o servidor responde que espera que seu proximo sequimento seja com **2917**.
+  - Na sexta linha o servidor envia o index.html pois o cliente avia o pedido antes.
+  - Na setima linha cliente diz para servidor Ack[.], ack nao e flag enta onao tem numero de sequencia.
+  - Na oitava linha o servidor diz [F.] e espera que a proxima coisa que o cliente enviar sera com numero de sequencia **2917** "ack 2675562917".
+  - Na nona linha o cliente diz [F.] com numero de sequencia **2917**, aqui como e um [F] o payload e zerado "length 0".
+  - Na decima linha o servidor responde com Ack [.] e espera que proximo numero seja **2918**. 
+    - Nesse caso aqui nao avera o proximo numero de sequencia, porem e assim que o servidor confirma que o cliente recebeu o payload. Assim o lado do cliente sabe que o servidor recebeu.
+
+[Fluxo em trafego anomala]
+
+`root@terminal:~# tcpdump -n -r anomalo.dump -S | cat -n | sed 's/^\n/' | less`
+
+![trafego_anomalo](img/trafego_anomalo.png)
+
+  - Trafego anomalo e por que, ou ouve perda de pacotes ip no caminho, ou os pacotes chegaram fora de ordem.
+  - Primeira linha, cliente para servidor [S] seq 116031**8600**.
+  - Segunda linha, servidor para cliente [S.] seq 24283**69942**.
+  - Terceira linha, o cliente diz numero de sequencia **69943**.
+  - Quarta linha, o cliente diz ao servidor o que ele quer [P.] "Push".
+  - Quinta linha, servidor para cliente diz [.].
+  - Sexta linha, se espera que o servidor envie um [P], enviando o que o cliente pediu.
+    - Porem nao e o que se esperava, o servidor enviou um [F.], e alem dele nao responder o que o cliente pediu, ele finalizou, e esta fora de ordem, pois o seq e **72010** e deveria ser **69943**. Sabendo disso ja se sabe que os pacotes estao fora de ordem.
+    - O cliente nao joga fora esse pacote pois sera util mais a frente, ele quardar no buffer dele.
+    - Na proxima linha o cliente deveria enviar o que ele estava esperando, porem como ele nao recebe o que estava esperando, ele vai pedir novamente o que ele nao recebeu, **"retransmissao a pedido"**. 
+    - Setima linha, cliente diz para servidor [A] **69943**
+    - Oitava linha, se espera agora que o servidor envia para o cliente um [P] seq **69943**.
+    Porem nao e o que o servidor envia.
+    - Nona linha, cliente ira novamente pedir o que ele estava esperando, enta ele envia ao servidor [A] **69943**.
+    - Decima linha, o servidor envia um [P] seq **69943**, dessa vez correto.
+    - Decima primeira linha, agora o cliente responde [.] **72011** da oitava linha.
+    
+  Olhando o numero de identificao do ip sera possivel saber o que aconeteceu. Se o numero de identificacao do ip faltar numero, e sinal que ouve perda, mas se os numeros estiverem em sequencia mas no entando estiverem fora de ordem, nao ouve perda, a chegada se deu fora de ordem. Vamos ver:
+  
+  `root@terminal:~# tcpdump -n -r anomalo.dump -S -v | less`
+  
+  O atributto "-v" e para ver detalhes.
+  
+  O que vai nos interesar e o lado do servidor.
+  
+  ![dump_detalhes](img/dump_detalhes.png)
+  1:28:00
+    
+
+
+<br />
+
+### Bridges
+
+  - As bridges sao nossas aliadas na analise de trafego e em sistemas de firewall.
