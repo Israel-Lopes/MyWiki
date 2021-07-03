@@ -373,12 +373,94 @@ em seguida fazer `GET /`.
   O que vai nos interesar e o lado do servidor.
   
   ![dump_detalhes](img/dump_detalhes.png)
-  1:28:00
+  (1:28:00 refazer essa parte)
     
+<br />
 
+### Protocolo ARP
 
+  - E um procolo de descoberta de tipo de endereco de hardware e tipo de endereco de protocolo.
+    - Qual mac esta ligado a qual endereco ip.
+
+Utilizando arp:
+
+Toda vez que uma maquina fizer um ping na minha rede, o arp vai circular e perguntar quem e 10.0.0.1, ai maquina oposta vai responder 10.0.0.1 sou eu e meu mac e : xx:xx:xx:xx:xx:xx:xx.
+
+`root@terminal:~# tcpdump -n arp`
+
+![arp_perguntando](img/arp_perguntando.png)
+
+  - 192.168.0.72 esta perguntando quem e o navegador de borda 192.168.0.2
+  - Entao objetivo e saber quem e 192.168.0.72, que esta frequentimente pingando na rede.
+    - Pode ser um celular com malware.
+
+![arp_mac](img/arp_mac.png)
+
+  - Minha maquina que e 192.168.0.180 esta perguntando com arp qual mac de 192.168.0.202
+    - 192.168.0.202 esta em endereco mac dc:bf:e9:0f:7f:e3
+
+  - Agora que sabemos isso, isso vai para uma tabela local que ficar armazena de 30 segundos a 30 minutos, variando de sistema operacional.
+
+`root@terminal:~# arp -n`
+
+![arp_tabela_local](img/arp_tabela_local.png)
+
+Netdiscover
+
+  - Ele pega tudo que esta sendo ouvido na rede, e vai montando uma tabela de arp map.
+
+`root@terminal:~# netdiscover`
+
+![netdiscover](img/netdiscover.png)
+  - Aqui vemos que nao se trata de um celular, provavelmente uma tv.
+  
+  - Vemos o basico de arp, arp pode ser usado em varios ataques.
+  - Ataques que sao de dificil deteccao, mas que tem recursos para voce previnir, swits que tem port security cisco, voce ativa o port security, isso quer dizer o seguinte, se mudar o mac que esta entrando na quela porta, a porta e bloqueada. Problema e que ele nao avisa, tem que ficar vasculhando para saber.
+  - Outra poscibilidade e voce enplementar o procolo 802x
+  
+
+<br />
+
+### Roteamento visto no modelo OSI
+
+![limite_rede](img/limite_rede.png)
+
+  - O sistema operacional quando recebe uma mascara de rede, imediatamente converte em endereco de rede e em endereco de broadcast.
+  - Endereco de rede e endereco de broadcast sao o limite superior e inferior da sua rede. Se estiver fora do limite, que e o caso do 11.10.15.23, precisara de roteamento.
+  
+  - Roteamento visto entre dois segmentos de rede:
+  ![roteamento_entre-dois](img/roteamento_entre-dois.png)
+  
+  - Segmento de rede eo que esta de um dos lados do roteador de rede. Cada um dos lados do roteador e um segmento de rede, cada segmento tem que ter um enderecamento proprio.
+  - 10.0.0.1 quer falar com 10.0.0.2, primeira pergunta que 0.0.1 faz, 0.0.2 pertence ao meu segmento de rede ? Sim. Porque 10.0.0.2 esta no mesmo segmento, pois esta no meio. Entao 0.0.1 manda um arp no segmento, perguntando, quem e 0.0.2 ? 0.0.2 responde sou eu e meu mac e xx:xx:xx:xx:xx:xx.
+  
+  - Roteamento visto pelo modelo OSI.
+  ![roteamneto_modelo_osi](img/roteamneto_modelo_osi.png)
+  
 <br />
 
 ### Bridges
 
-  - As bridges sao nossas aliadas na analise de trafego e em sistemas de firewall.
+  - As bridges sao nossas aliadas na analise de trafego e em sistemas de firewall. Poderia se dizer que a brige e similar a um switch, diferenca e que switch tem varias portas.
+  
+  [como criar uma bridge](http://bit.ly/bridge_debian)
+  
+  - Existem dois tipos de briges, volatil e permanente:
+    - Volatil, apos reiniciar computador, perdese tudo.
+    - Permanente, mesmo reiniciando ela continua.
+
+Criando uma Bridge
+
+Para criar a bridge tem que ter o pacote **bridg-utils** instalado.
+  - Primeiro passo e remover todos os ips da maquina que sera a bridge.
+
+  - `root@terminal:~# brctl adbr br0`
+    - Adicionando a bridge.
+  - `root@terminal:~# brctl addif br0 eth0`
+    - Criando a interface 0.
+  - `root@terminal:~# brctl addif br0 eth1`
+    - Criando a interface 1.
+  - `root@terminal:~# brctl show br0`
+    - Visualizando a bridge e suas interfaces.
+  - `root@terminal:~# ifconfig br0 up`
+    - Subindo a bridge.
