@@ -128,7 +128,7 @@ Nesse caso ainda que a maquina nao tenha placa de rede, avera o retorno do pong.
 
 Como podemos observar **0.0.0.0** nao significa default, e sim esta rede.
 
-`root@terminal:~# router -n`
+`root@terminal:~# route -n`
 ![route_esta_rede](img/route_esta_rede.png)
 
   - Analisando a imagem, **0.0.0.0** e a representacao de todas as redes em que a maquina esta conectada na quele momento. Nesse caso **0.0.0.0** personifica:
