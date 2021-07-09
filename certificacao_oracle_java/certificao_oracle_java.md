@@ -7,7 +7,7 @@
 ### Sumario
 
 1. [defina escopo de variaveis](#defina_escopo_de_variaveis)
-1. [defina estrutura de uma classe](#defina_estrutura_de_uma_classe)
+1. [estrutura de uma classe](#estrutura_de_uma_classe)
 
 <br />
 
@@ -37,7 +37,79 @@ Sao variveis que nao podem ter seu valor auterado. Sao precedidas pela palavra r
 
 <br />
 
-### Defina escopo de variaveis <a name="defina_estrutura_de_uma_classe">
+### Estrutura de uma classe <a name="estrutura_de_uma_classe">
+
+### Pacotes
+
+Pacotes servem para separar e organizar diversas classes do sistema.
+
+Para definir um pacote, se utiliza a palavra reservada **package**.
+
+  - `package br.com.apinegocios.calculos`
+
+### Classe 
+
+A classe e onde definimos os atributos e comportamentos de um objeto.
+
+  - `class Pessoa {}`
+
+### Variaveis 
+
+Variaveis sao bem simples de serem declaradas. Sempre se comeca pelo tipo seguido do nome dela.
+
+  - `String nome`
+
+### Metodos
+
+Para declarar metodos precisamos do tipo do retorno, seguido do nome e fecha parenteses, podendo aver parametros ou nao de entrada.
+
+### Construtores
+
+Uma classe pode ter zero ou varios construtores. O construtor deve nao possuir retorno e seu nome ser igual da classe.
+
+Construtor e usado para validar os dados de uma classe, mas em geral o compilador cria o construtor automaticamente.
+
+```
+classe Pessoa () {
+
+  Pessoa () {// Cosntrutor}
+  
+  void Pessoa () {// Methodo}
+
+}
+```
+### Interfaces
+
+Alem de classes, tambem podemos declarar interfaces. Basta declarar palavra reservada **interface** antes. 
+
+Interfaces possuem apenas methodos abstratos e nao podem ser estaticos, pois a interface e abstrata.
+
+```
+interface Autenticacao {
+
+  final int tamanhoDaSenha = 8;
+```
+E possivel declarar mas de uma classe ou interface no mesmo arquivo, porem nao e uma boa pratica.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
