@@ -66,7 +66,115 @@ Vamos instalar um servidor chamdo **nginx**, mapeando a porta 8080
 
    - Aqui ira retornar a pagina.
 
+<br />
 
+### Como mapear um volume
 
-Como mapear um volume
+`root@terminal:~# docker container run -p 8080:80 -v $(pwd)/html:/usr/share/nginx/html nginx`
+
+  - A opcao "-v" para mapear um volume.
+  - Aqui eu quero que o nginx para de apontar para pasta padrao do container e aponte para pasta na maquina host.
+
+<br />
+
+### Rodando servidor web em background
+
+`root@terminal:~# docker container run -d --name ex-daemon-basic -p 8080:80 -v $(pwd)/html:/usr/share/nginx/html nginx`
+
+Verificando se container esta rodando
+
+`root@terminal:~# docker container ps`
+
+Encerrando o container
+
+`root@terminal:~# docker container stop ex-daemon-basic`
+
+  - informar nome do container, "ex-daemon-basic"
+  - Acrecentar a opcao "stop"
+
+<br />
+
+### Gerenciando container em background
+
+`root@terminal:~# docker container start ex-daemon-basic`
+
+  - Opcao "start", inicializa o container.
+
+`root@terminal:~# docker container restart ex-daemon-basic`
+
+  - Opcao "restart", reinicializa o container
+  
+OBS: Outra forma de se referencia ao container no lugar do nome, e utilizar o **container id**.
+
+Exemplo:
+
+`root@terminal:~# docker container stop ec2df06d912a`
+
+<br />
+
+### Manipulcao de container em modo daemon
+
+`root@terminal:~# docker container ps`
+
+`root@terminal:~# docker container list -a`
+
+`root@terminal:~# docker container ls`
+
+Como acessar logs de um container
+
+`root@terminal:~# docker container logs ex-daemon-basic`
+
+  - Para acessar logs do container, primeiramente o container tem que estar sendo executado.
+
+`root@terminal:~# docker container inspect ex-daemon-basic`
+
+  - Ira exibir em formato json, varias caracteristicas do container.
+
+`root@terminal:~# docker container exec ex-daemon-basic uname -or`
+
+  - Exibe o sistema operacional que esta sendo executado dentro do container.
+
+`root@terminal:~# docker container rmi ex-daemon-basic`
+
+  - A opcao "rmi", remove uma imagem.
+
+<br />
+
+Opcao de help
+
+`root@terminal:~# docker container --help`
+
+`root@terminal:~# docker image --help`
+
+`root@terminal:~# docker volume --help`
+
+<br />
+
+### Criando uma image
+
+Crie o arquivo **Dockerfile**.
+
+`
+  FROM nginx:latest 
+  RUN echo '<h1>Hello World!</h1>' > /usr/share/nginx/html/index.html
+`
+`root@terminal:~# docker image build -t ex-simple-build .`
+
+  - Executa o Dockerfile para criar a image.
+
+Agora podemos executar o container apartir dessa imagem.
+
+`root@terminal:~# docker container run -p 80:80 ex-simple-build`
+
+  - Executando o comando e abrindo navegador na porta 80, podera ver container rodando.
+
+![navegador_hello](img/navegador_hello.png)
+
+<br />
+
+Outro exemplo de Dockerfile.
+
+![criando_image](img/criando_image.png)
+
+ 
 
