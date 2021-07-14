@@ -10,6 +10,7 @@
 2. [Estrutura de uma classe](#estrutura_de_uma_classe)
 3. [Crie aplicacoes java com metodo main, rode na linha de comando](#rode_na_linha_de_comando)
 4. [Importe outros pacotes](#importe_outros_pacotes_java)
+5. [Declarar e inicializar variaveis](#declarar_e_inicializar_variaves)
 
 <br />
 
@@ -35,7 +36,7 @@ Variaveis de instancia ou variaveis de objeto sao os atributos dos objetos. Sao 
 
 Sao variveis que nao podem ter seu valor auterado. Sao precedidas pela palavra rezervada **static**.
 
-  - `static valorDePI = 3,14`
+  - `static double valorDePI = 3,14`
 
 <br />
 
@@ -216,6 +217,184 @@ Caso importemos dois ou mas pacotes que contenham classes com o mesmo nome, sera
 ### import static
 
 Desde o Java 5, e possivel importar apenas metodos e atributos estaticos de uma classe, usando a palavra-chave **static**.
+
+<br />
+
+### Declarar e inicializar variaveis <a name="declarar_e_inicializar_variaveis">
+
+Nem todas linguagens exige que as variaveis sejam inicializadas antes de serem utilizadas. Mas, no java, a inicializacao e obrigatoria, ode ser inplicita ou explicita.
+
+### Tipos primitivos
+
+Todos os tipos primitivos do java  ja estao definidos e nao e possivel criar novos tipos primitivos. Sao oito tipos primitivos:
+
+  - byte 1 byte (8bits, de -128 a 127); 
+  - short 2 bytes (16 bits, de -32.768 a 32.767);
+  - char 2 bytes (so positivo), (16 bits, de 0 a 65.535);
+  - int 4 bytes (32 bits, de -2.147.483.648 a 2.147.483.647);
+  - long 8 bytes (64 bits, de -9.223.372.036.854.775.808 a 9.223.372.036.854.775.807);
+  - float 4 bytes (32 bits, de +/-1.4*10^45a +/-3.4028235*10^38);
+  - double 8 bytes (64 bits, de +/-4.9*10^324 a +/-1.7976931348623157*10^308);
+    - Todos os numeros de ponto flutuante, tambem podem assumir os seguintes valores.
+    - +/- infinit
+    - +/- o
+    - NAN (not a Number)
+  - boolean
+
+Nao ha necessidade de decorar o intervalo e tamanho de todos os tipos primitivos. O unico intervalo que e cobrado na prova e o do byte.
+
+### Bases diferentes
+
+No caso dos numeros inteiros, podemos declarar usando bases diferentes.
+
+O Java suporta a base decimal e mais as bases octal, hexadecimal e binaria.
+
+um numero na base octal tem comecar com um zero a esquerda, usa algarimos de  0 ate 7.
+
+```
+int i = 0761; // octal
+
+System.out.println(i); // 497
+```
+
+Hexadecimal, comeca com 0x ou 0X e usa os algarismos de 0 ate 15.
+
+```
+int i = 0xAB3400; // hexadecimal
+
+System.out.println(i); // 11219968
+```
+
+Na base binaria, comecamos com 0b, e so podemos usar 0 e 1
+
+```
+int i = 0b100001011; // binary
+
+System.out.println(i); // 267
+```
+
+### Notacao cientifica
+
+Ao declarar doubles ou floats, podemos usar a notacao cientifica
+
+```
+double d = 3.1E2;
+System.out.println(d); // 310.0;
+```
+
+```
+float e = 2e3f;
+System.out.println(d); // 2000.0;
+```
+
+```
+float f = 1E4F;
+System.out.println(f); // 10000.0;
+```
+
+### Usando underlines em literais
+
+A partir do java 7, existe a possibilidade de usarmos underlines (_) quanmdo estamos declarando literais para facilitar a leitura do codigo:
+
+``int a = 123_456_789;``
+
+A mesma regra se aplica a numeros de ponto flutuante.
+
+### Iniciando chars
+
+Os chars sao iniciados colocando o caractere desejado entre aspas simples.
+
+``char c = 'A';``
+
+Mas podemos iniciar numeros tambem. Neste caso, o numero representa a posicao do caracter na tabela unicode:
+
+```
+char c = 65;
+System.out.println(c); // A
+```
+
+### Identificadores
+
+Quando escrevemos nossos programas, usamos basicamente dois tipos de termos para compor nosso codigo: identificadores e palavras reservadas.
+
+Chamamos de identificadores as palavras definidas pelo programador para nomear variaveis, metodos, contrutores, classes, interfaces etc.
+
+Ja as palavras reservadas ou palavras-chave sao termos predefinidos da linguagem que podemos usar para definir comandos(if, for, class, entre outros).
+
+Palavras chaves:
+  - abstract
+  - assert
+  - boolean
+  - break
+  - byte
+  - case
+  - catch
+  - char
+  - class
+  - const
+  - continue
+  - default
+  - do
+  - double
+  - else
+  - enum
+  - extends
+  - false
+  - final
+  - finally
+  - float
+  - for
+  - goto
+  - if
+  - implements
+  - import
+  - instanceof
+  - int
+  - interface
+  - long
+  - native
+  - new
+  - null
+  - package
+  - private
+  - protected
+  - public
+  - return
+  - short
+  - static
+  - strictfp
+  - super
+  - switch
+  - synchronized
+  - this
+  - throw
+  - trows
+  - transient
+  - true
+  - try
+  - void
+  - volatile
+  - while
+
+### NULL, FALSE E TRUE
+
+Outras tres palavras reservadas que nao aparecem na lista sao **true**, **false** e **null**.
+
+Mas segundo a especificacao da linguagem Java, esses tres termos sao considerados literais e nao palavras reservadas(embora tambem sejam reservadas), totalizando 53 palavras reservadas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
