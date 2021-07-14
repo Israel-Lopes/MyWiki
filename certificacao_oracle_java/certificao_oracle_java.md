@@ -147,10 +147,75 @@ E a forma mas usada. Imagine que queremos usar alguma biblioteca junto com nosso
 
 E podemos passar tanto caminhos de outras pastas como de JARs ou zips.
 
+<br />
+
 ### Importe outros pacotes java e deixe os acessiveis <a name="importe_outros_pacotes_java">
 
+Se duas classes estao no mesmo pacote, elas se "enxergam" entre si, sem a necessidade de colocar o nome do pacote.
+
+Para usar uma classe que esta em outro pacote, temos duas opcoes: podemos referencia-la usando o que chamamos de Full **Qualified Name**, ou seja, o nome do pacote seguido do nome da classe
+
+### importanto classes com mesmo nome 
+
+Quando precisamos usar classes com o mesmo nome mas  de pacotes diferentes, so podemos importar uma delas. A outra deve ser referenciada pelo **Full Qulified Name**. Tentativas de importar as classes irao resultar em erros de compilacao.
+
+### Pacotes
+
+Pacotes servem para organizar suas  classes e interfaces. Eles permitem agrupar componetes que tenham alguma relacao entre si, alem de garantir algum nivel de controle de acesso a menbros. Alem de serem uma divisao logica para suas classes.
+
+### Subpacotes e estrutura de diretorios
+
+Pacotes sao usados pela JVM como uma maneira de encontrar as classes so sistema de arquivos, logo a estrututra de diretorios do projeto deve ser a mesma da estrututra de pacotes.
+
+### Convencoes de nomes para pacotes
+
+Existem algumas convecoes para nomes de pacotes. Elas nao sao obrigatorias, mas gerealmente sao seguidas para facilitar o entendimento e organizacao do codigo:
+
+  - O nome do pacote deve ser todo em letras minusculas;
+  - um pacote deve comecar com site da empresa, ao contrario;
+  - Apos o site,deve vir o projeto;
+  - Apos o projeto, a estrutura e livre.
+
+### Import usando classes de outros pacotes
+
+Existem diversas maneiras de referenciar uma classe de pacotes diferente.
+
+### Full Qualifield Name
+
+Podemos refernciar uma classe em nosso codigo usandoo que chamamos de Full Qualifield Name, ou FQN. Ele e composto pelo pacote completo mais o nome da classe:
+
+```
+class Pessoa {
+  // Full Qualifield Name
+  java.util.Calendar aniversario;
+}
+```
+
+Usar o FQN nem sempre deixa o codigo legivel, em vez de usar o nome completo da classe, podemos importa-la e usar apenas o nome simples da classe:
+
+```
+java.util.Calendar aniversario;
+
+class Pessoa {
+  Calendar aniversario;
+}
+```
+E permitido importar todas as classes de um pacote usando *.
 
 
+```
+java.util.*;
+
+class Pessoa {
+  Calendar aniversario;
+}
+```
+
+Caso importemos dois ou mas pacotes que contenham classes com o mesmo nome, sera obrigatorio usar FQN. Caso nao faca isso, tera erro.
+
+### import static
+
+Desde o Java 5, e possivel importar apenas metodos e atributos estaticos de uma classe, usando a palavra-chave **static**.
 
 
 
