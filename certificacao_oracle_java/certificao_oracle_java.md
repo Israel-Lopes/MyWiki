@@ -11,6 +11,7 @@
 3. [Crie aplicacoes java com metodo main, rode na linha de comando](#rode_na_linha_de_comando)
 4. [Importe outros pacotes](#importe_outros_pacotes_java)
 5. [Declarar e inicializar variaveis](#declarar_e_inicializar_variaves)
+6. [Diferenca entre variaveis de referencia a objetos e tipos primitivos](#diferenca_entre_variaveis)
 
 <br />
 
@@ -381,6 +382,138 @@ Palavras chaves:
 Outras tres palavras reservadas que nao aparecem na lista sao **true**, **false** e **null**.
 
 Mas segundo a especificacao da linguagem Java, esses tres termos sao considerados literais e nao palavras reservadas(embora tambem sejam reservadas), totalizando 53 palavras reservadas.
+
+<br />
+
+### Diferenca entre variaveis de referencia a objetos e tipos primitivos <a name="diferenca_entre_variaveis">
+
+As variaveis de tipos primitivos de fato armazenam os valores (e nao ponteiros/referencias). Ao se atribuir o valor de uma variavel primitiva a uma outra variavel, o valor de uma variavel primitiva a uma outra variavel, o valor e copiado, e o roiginal nao e alterado.
+
+```
+int a = 10;
+int b = a;
+b++;
+System.out.println(a); // Continua com 10.
+```
+
+Os programas contruidos com o modelo orientado a objetos utilizam evidentemente, objetos. Para acessar um atributo ou invocar um metodo de qualquer objeto, e necessario que tenhamos armazenar uma referencia para o mesmo.
+
+Uma variavel de referencia e um ponteiro para o endreco de memoria onde o objeto se encontra. Ao atribuirmos uma variavel de  referencia a outra, estamos copiando a referencia, ou seja, fazendo com que as duas variaveis apontem para o mesmo objeto, e nao criando um novo objeto:
+
+```
+class Carro {
+  int ano;
+}
+
+class Test {
+  public static void main(String[] args){
+    Carro a = new Carro();
+    Carro b = a; // Agora (b) aponta para o mesmo objeto de (a)
+    
+    a.ano = 5;
+    
+    System.out.println(b.age); // Imprime 5
+  }
+}
+```
+
+Duas referencias sao consideradas iguais somente se elas estao apontando para o mesmo objeto. Mesmo que os objetos que elas apontem sejam iguais, ainda sao referencias para objetos diferentes:
+
+```
+Carro a = new Carro();
+a.ano = 5;
+
+Carro b = new Carro();
+b.ano = 5;
+
+Object c = a;
+
+System.out.println(a == b); // false
+System.out.println(a == c); // true
+```
+
+### Leia ou escreva para Campos de objetos
+
+Ler e escrever propriedades em objetos e uma das tarefas mais comuns em um programa java. Para acessar um atributo, usamos o operador .(ponto), junto a uma varivel de referncia para um objeto:
+
+```
+class Carro {
+  String model;
+  int year;
+  
+  public Carro() { year = 2014; }
+  
+  public String getData() {
+    return model + " - " + year;
+  }
+  
+  public void setModel(String m) {
+    this.model = m;
+  }
+}
+```
+
+### Explique o ciclo de vida de um objeto (criacao, "de referencia" e garbage collection)
+
+O ciclo de vida dos objetos java esta dividido em tres fases distintas.
+
+#### Criacao de objetos
+
+Toda vez que usamos o operador new, estamos criando uma nova instancia de um objeto na memoria:
+
+```
+class Pessoa {
+  String nome;
+}
+
+class Test {
+  public static void main(String[] args) {
+    Pessoa p = new Pessoa(); // Criando objeto do tipo Pessoa.
+  }
+}
+```
+
+Repare que ha uma grande diferenca entre criar um objeto e declarar uma variavel. A variavel e apenas uma referencia, um ponteiro, nao contem um objeto de verdade.
+
+```
+// Apenas declarando a variavel, nenhum objeto foi criado.
+Pessoa p;
+
+// Agora um objeto foi criado e atribuido a variavel.
+p = new Pessoa();
+```
+
+#### Objeto acessivel
+
+A partir do momento em que um objeto foi criado e atribuido a uma variavel, dizemos que o objeto esta acessivel, ou seja, podemos usa-lo em nosso programa:
+
+```
+Pessoa p = new Pessoa(); // Criando.
+p.nome = "Joao"; // inserindo.
+```
+
+#### Objeto inacessivel
+
+Um objeto e acessivel enquanto for possivel "alcancar-lo" atraves de alguma referencia direta ou indireta. Caso nao exista nenhuma caminho direto ou indireto para acessar esse objeto, ele se torna inacessivel:
+
+```
+Pessoa p = new Pessoa();
+p.nome = "Joao";
+
+// Atribuimos a (p) o valor null, agora objeto nao esta mais acessivel.
+p = null; // A
+
+// Criando objeto sem variavel.
+new Pessoa(); // B
+```
+
+Nesse codigo, criamos um objeto do tipo **Pessoa** e o atribuimos a variavel (p). Na linha **A** atribuimos (null) a (p). O que acontece com objeto anterior? Ele simplismente nao pode mais ser acessado por nosso programa, pois nao temos nenhum ponteiro para ele. O mesmo pode ser dito do objeto criado na linha **B**. Apos essa linha, nao conseguimos mais acessar esse objeto.
+
+Tome cuidado: se a prova perguntar quantos objetos foram criados no codigo acima, temos a criacao de duas pessoas em uma  String, totalizando tres objetos
+
+Outra maneira de ter um objeto  inacessivel e quando o escopo da variavel que aponta para ele terminar.
+
+#### Garbage Collection
 
 
 
