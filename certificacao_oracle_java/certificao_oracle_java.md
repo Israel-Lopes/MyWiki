@@ -515,12 +515,256 @@ Outra maneira de ter um objeto  inacessivel e quando o escopo da variavel que ap
 
 #### Garbage Collection
 
+Todo objeto inacessivel e considerado elegivel para o garbage collector. Algumas questoes da prova perguntam quantos objetos sao elegiveis ao garbage collector ao final de algum trecho de codigo.
 
+```
+public class Bla {
+  int b;
+  public static void main(String[] args) {
+    Bla b;
+    for (int i = 0; i < 10; i++) {
+      b = new Bla();
+      b.b = 10;
+    }
+    System.out.println("end"); // A
+  }
+}
+```
 
+Ao chegar na linha A, temos 9 objetos elegiveis do tipo Bla para o Garbage Collector.
 
+### Objetos elegiveis X Objetos coletados
 
+O garbage collector roda em segundo plano juntamente com sua aplicação java. Nao e possivel prever quando ele sera executado, portanto nao se pode dizer com certeza quantos objetos foram efetivamente coletados em um certo ponto da aplicação. O que podemos determinar e quantos objetos sao elegiveis para a coleta. A prova pode tentar se aproveitar do descuido do desenvolvedor aqui numca temos certeza de quantos objetos sao elegiveis para a coleta. A prova pode tentar se aproveitar do descuido do desenvolvedor aqui: numca temos certeza de quantos objetos passaram pelo garbage collector, logo, somente indique quantos estao passiveis de serem coletados.
 
+```
+import java.util.*
 
+class Car {
+
+}
+class Cars {
+  List<Car> all = new ArrayList<Car>();
+}
+
+class Test{
+  public static void main(String args[]){
+    Cars cars = new Cars();
+    for (int i = 0; i < 100; i++ ){
+      cars.all.add(new Car());
+      // ate essa linha todos ainda podem ser alcançados
+    }
+  }
+}
+```
+Nesse codigo, por mais que tenhamos criado 100 carros e um objeto do tipo Cars, nenhum dels pode ser garbage coletado pois todos podem ser alcançados direta ou indiretamente atraves de nossa ***thread*** principal.
+
+### Argumentos variaveis: varargs
+
+A partir do Java5, varargs possibilitam um metodo que recebe um numero variavel(nao fixo) de parametros. E a maneira de receber um array de objetos e possibilitar uma chamada mais facil do metodo.
+Podemos chamalo com qualquer numero de argumentos:
+
+```
+class Calculator {
+ public int sum(int... nums) {
+  int total = 0;
+  for (int a : nums) {
+    total += a;
+  }
+  return total;
+ }
+}
+```
+
+### Manipule dados usando a classe String-Builder e seus metodos
+
+Para suportar Strings mutaveis, o Java possui as classes StringBuffer e StringBuilder. A operacao mais basica e o append que permite concatenar ao mesmo objeto:
+
+```
+StringBuffer sb = new StringBuffer();
+sb.append("Certificacao");
+sb.append(" - ");
+sb.append("Oracle");
+
+System.out.println(sb); // Certificacao - Oracle
+```
+
+Repare que o ***append*** nao devolve novos objetos como em ***String***, mas altera o proprio StringBuffer, que e mutavel.
+
+Quando fazemos concatenacao de String usando o +, por de baixo dos panos, e usado um StringBuilder. Nao existe a operacao + na classe String. O compilador troca todas as chamadas de concatenacao por StringBuilders(podemos ver isso no bytecode compilado).
+
+### Principais metodos de StringBuffer e StringBuilder
+
+Ha a familia de metodos append com overloads para receber cada um dos primitivos, String, arrays de chars, outros StringBuffer etc. Todos eles devolvem o proprio StringBuffer/Builder o que permite chamadas encadeadas:
+
+```
+StringBuffer sb = new StringBuffer();
+sb.append("certificacao").append(" - ").append("Oracle");
+system.out.println(sb);
+```
+
+O metodo append possui umja versao que recebe Object e chama o meotodo toString de seu objeto.
+
+Ha ainda os metodos ***insert*** para inserir coisas no meio. Ha versoes que recebem primitivos, String, arrays de char etc. Mas todos tem o primeiro argumento recebendo o indice onde queremos inserir:
+
+```
+Stringbuffer sb = new StringBuffer();
+sb.append("certificacao - Oracle");
+sb.insert(9, "Ensino");
+
+System.out.println(sb); // Certificacao - Ensino
+```
+
+Para converter um ***StringBuffer/Bui8lder*** em ***String***, basta chamar o ***toString*** mesmo. O metodo ***reverse*** inverte seu conteudo:
+
+```System.out.println(new StringBuffer("guilherme").reverse());```
+
+Fora esses, tambem ha o ***trim***, ***charAt***, ***length()***, ***equals***, ***indexOf***, ***lastIndexOf***, ***substring*** nao altera o valor do seu ***StringBuilder*** ou ***StringBuffer***, mas retorna a ***String*** que voce deseja. Existe tambem o metodo ***subSequence*** que recebe o inicio e o fim e funciona da mesma maneira que o ***substring*** com dois argumentos.
+
+### Criando e manipulando Strings
+
+Existem duas maneiras tradicionais de criar uma ***Strings***, uma implicita e outra explicita:
+
+```
+String implicit = "Java";
+String explicit = new String("Java"); 
+```
+
+A comparacao entre esses dois tipos de criacao de ***Strings*** e feita na seccao ***Test quality between strings and other object using == and equals() 5.3***
+
+Existem outras maneiras nao comuns, como atravez de uma array:
+
+```
+char[] name = new char[] {'J', 'a', 'v', 'a'};
+String fromArray = new String(name);
+```
+
+Ou ainda podemos criar uma ***String*** baseada em um ***StringBuilder*** ou ***StringBuffer***:
+
+```
+StringBuilder sb1 = new StringBuilder("Java");
+String name Builder = new String(sb1);
+
+StringBuffer sb2 = new StringBuffer("Java");
+String nameBuffer = new String(sb2);
+```
+
+Como uma String nao e um tipo primitivo, ela pode ter valor ***null***, lembre se disso:
+
+```
+String name = null; // explicit null
+```
+
+Podemos concatenar ***Strings*** com o +;
+
+```
+String name = "Java" + "Exam";
+```
+
+Caso tente concatenar ***null*** com uma ***String***, temos a conversao de ***null*** para ***String***:
+
+```
+String nulled = null;
+System.out.println("value:" + nulled); // value: null
+```
+
+E o contrario tambem tem o mesmo resultado:
+
+```
+String nulled = null;
+System.out.println(nulled + "value"); // null value
+```
+
+O java faz conversao de tipos primitivos para ***Strings*** automaticamente:
+
+```
+String name = "Java" + ' ' + "Certification" + ' ' + 1500;
+System.out.println(name); // Certification java 1500
+``` 
+
+Lembre se da precedencia de operadores. O exemplo a seguir mostra o codigo sendo interpretado da esquerda pra direita(primeiro a soma);
+
+```
+String value = 15 + 00 + "certification";
+System.out.println(value); // 15 certification
+```
+
+### Strings sao imutaveis
+
+O principal ponto sobre Strings e que elas sao imutaveis:
+
+```
+String s = "java";
+s.toUpperCase();
+System.out.println(s);
+```
+
+Esse codigo imprime ***java*** em minusculo. Isso porque o metodo ***toUpperCase*** nao altera a ***String***  original. Na verdade, se olharmos o javadoc da classe ***String*** vamos perceber que todos os metodos que parecem modificar uma String na verdade devolvem uma nova.
+
+```
+String s = "java";
+String s2 = s.toUpperCase();
+system.out.println(s2);
+```
+
+Agora sim imprimira ***JAVA***, uma nova ***String***. Ou, usando a mesma referencia:
+
+```
+String s = "java";
+s = s.toUpperCase();
+system.out.println(s);
+```
+
+Para tratarmos de "strings mutaveis", usamos as classes ***StringBuffer*** e ***StringBuilder***.
+
+Lembre se que a ***String*** possui um array por tras e, seguindo o padrao do Java, suas posicoes comecam em 0;
+
+```
+// 0=g, devolve 'g'
+char caracter0 = "guilherme".charAt(0);
+
+// 0=g 1=u, devolver 'u'
+char caracter1 = "guilherme".charAt(1);
+
+// 0=g 1=u 2=i, devolve 'i'
+char character2 = "guilherme".charAt(2);
+```
+
+Cuidado ao acessar uma posicao indevida, voce pode levar um ***StringIndexOutOfBoundsException*** (atencao ao nome da ***Exception***, nao e ***ArrayindexOutofBoundsException***).
+
+### Principais metodos de String 
+
+O metodo ***length*** imprime o tamanho da ***String***:
+
+```
+String s = "Java";
+System.out.println(s.length()); // 4
+```
+
+Ja o metodo ***isEmpty*** diz se a ***String*** tem tamanho zero:
+
+```
+System.out.println("".isEmpty()); // true
+System.out.println("Java".isEmpty()); // false
+System.out.println(" ".isEmpty()); // false
+```
+
+Devolve uma nova String:
+
+ - ***String toUpperCase()*** tudo em maisculo;
+ - ***String toLowerCase()*** tudo em minusculo;
+ - ***String trim()*** retira espacos em branco no comeco e no fim;
+ - ***String substring(int beginIndex, int endIndex)*** devolvera substring a partir do indice passado ate o final da String;
+ - ***String concat(String)*** concatene o parametro ao fim da String atual e devolve o resultado;
+ - ***String replace(char oldChar, char newchar)*** substitui todas as ocorrencias de determinado ***char*** por outro;
+ - ***String replace(CharSequence target, charSequence replacement)*** substitui todas as ocorrencias de determinada ***CharSequence*** (como String) por outra.
+ 
+ O metodo ***trim*** limpa caracteres em branco nas duas pontas da ***String***.
+ 
+ O metodo ***replace*** substituira todas as ocorrencias de um texto por outro.
+ 
+ Para extrair pedaços de uma ***String***, usamos o metodo ***substring***. Cuidado ao usar o metodo ***substring*** com valores invalidos, pois eles jogam uma ***Exception***. O segredo do metodo ***substring*** e que ele nao inclui o caracter da posicao final, mas inclui o caractere da posicao inicial.
+ 
 
 
 
