@@ -12,6 +12,7 @@
 4. [Importe outros pacotes](#importe_outros_pacotes_java)
 5. [Declarar e inicializar variaveis](#declarar_e_inicializar_variaves)
 6. [Diferenca entre variaveis de referencia a objetos e tipos primitivos](#diferenca_entre_variaveis)
+7. [Usando operadores e construcoes de decisao e Arrys](#operadores_construcoes)
 
 <br />
 
@@ -764,8 +765,85 @@ Devolve uma nova String:
  O metodo ***replace*** substituira todas as ocorrencias de um texto por outro.
  
  Para extrair pedaços de uma ***String***, usamos o metodo ***substring***. Cuidado ao usar o metodo ***substring*** com valores invalidos, pois eles jogam uma ***Exception***. O segredo do metodo ***substring*** e que ele nao inclui o caracter da posicao final, mas inclui o caractere da posicao inicial.
- 
 
+<br />
+
+### Usando operadores e construcoes de decisao e Arrys<a name="operadores_construcoes">
+
+Para manipular os valores armazenados das variaveis, tanto as primitivas quanto as nao primitivas, a linguagem de programacao deve oferecer operadores. Um dos operadores mais importantes e o que permite guardar um valor em uma variavel. Esse operador e denominado **operados de atribuicao**.
+
+### Pool de Strings
+
+O Java mantem um pool de objetos do tipo ***String***. Antes de criar uma nova String, primeiro o java verifica neste pool se uma String com mesmo conteudo ja existe; caso sim, ele a reutiliza, evitando criar dois objetos exatamente iguais na memoria. Como as duas referencias estao apontando para o mesmo objeto do pool, o == retorna ***true***.
+
+### Unreachable Code e Missing return
+
+Um codigo Java nao compila se o compilador perceber que aquele codigo nao sera executado sob hipotese alguma.
+
+### Declare, instancie, inicialize e use um array multidimencional
+
+Podemos generalizar a ideia de array para construir array de duas dimensoes, em outras palavras, array de arrays. Analogicamente, podemos definir arrays de quantas dimensoes quisermos.
+
+```
+// Array de duas dimencoes.
+int [][] table;
+
+// Array de tres dimensoes
+int [][] cube[];
+
+// Array de quatro dimensoes
+int[] [][]hipercube[];
+```
+
+Perceba que as dimensoes podem ser definidas do lado esquerdo ou direito da variavel.
+
+**Inicializacao**
+
+Podemos inicializar as arrays com dimensoes diferentes, como no caso a seguir onde inicializarmos a primeira dimensao com 10 e a segunda com 15:
+
+```
+int [][] table = new int[10][15];
+```
+
+Podemos tambem inicializar somente a primeira dimensao, deixando as outras para depois:
+
+```
+int [][][] cube = new int [10][][];
+```
+
+Podemos inicializar diretamente com valores que conhecemos, e nesse caso colocamos todas as dimensoes:
+
+```
+int [][] test = new int [][]{{1,2,3}, {3,2,1}, {1,1,1}};
+```
+
+### Interator e o enhanced for
+
+A interface ***Interator*** define uma maneira de percorrer colecoes. Isso e necessario porque, em colecoes diferentes de ***List***, nao possuimos metodos para pegar o enesimo elemento. Como, entao, percorrer todos os elementos de uma colecao?
+
+ - ***hasNext***: retorna um booleano indicando se ainda ha elementos a serem percorridos por esse iterator;
+ - ***next***: pula para o proximo elemento, devolvendo-o;
+ - ***remove***: remove o elemento atual da colecao.
+ 
+ Normalmente o codigo que costuma aparecer para percorrer uma colecao e o seguinte:
+ 
+ ```
+ Collection<String> strings = new ArrayList<String>();
+ Interator<String> interator = string.iterator();
+ while (iterator.hasNext()) {
+  String current = interator.next();
+  System.out.println(current);
+ }
+ ```
+ 
+ O ***enhanced-for*** tambem pode ser usado nesse caso:
+ 
+ ```
+ Collection<String> strings = new ArrayList<String>();
+ for (String current : strings) {
+  System.out.println(current);
+ }
+ ```
 
 
 
