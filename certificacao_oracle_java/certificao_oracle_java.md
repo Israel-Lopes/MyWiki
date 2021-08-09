@@ -13,6 +13,7 @@
 5. [Declarar e inicializar variaveis](#declarar_e_inicializar_variaves)
 6. [Diferenca entre variaveis de referencia a objetos e tipos primitivos](#diferenca_entre_variaveis)
 7. [Usando operadores e construcoes de decisao e Arrys](#operadores_construcoes)
+8. [Usando lacos](#usando_lacos)
 
 <br />
 
@@ -844,10 +845,14 @@ A interface ***Interator*** define uma maneira de percorrer colecoes. Isso e nec
   System.out.println(current);
  }
  ```
+ 
+ ### O metodo equals em colecoes
+ 
+ A maoria absoluta das colecoes usa metodo ***equls*** na hora de buscar por elementos, como nos metodos ***contains*** e ***remove***. Se voce deseja ser capaz de remover ou buscar elementos, tera que provavelmente sobrescrever o metodo ***equals*** para refletir o conceito de iqualdade em que esta interrassado, e nao  somente  a igualdade de referencia(implementacao padrao do metodo). Cuidado  ao tentar sobrescrever o metodo ***equals***, se voce escrever lo recebendo um tipo especifico em vez de ***Objeto***, nao o estara sobrescrevendo, a o ***ArrayList*** continuara invocando o codigo antigo, a implementacao padrao de ***equals***.
+ 
+ <br />
 
-
-
-
+### Usando lacos<a name="usando_lacos">
 
 
 
