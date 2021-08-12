@@ -866,3 +866,5 @@ A interface ***Interator*** define uma maneira de percorrer colecoes. Isso e nec
 
 
 
+
+
