@@ -8,7 +8,7 @@ Apache kafka alem de manipular informacoes, ele consegue guardar informacoes par
 
 ### Producer
 
-O ***producer*** e qual quer sistema que vai produzir os dados que sera manipulado e encaminhado para apache kafka. Apache kafka funciona no formato um ***cluster***, ou seja, voce tem diversas maquinas rodando o pache kafka, e cada maquina dessa e chamada de ***broker***.
+O ***producer*** e qualquer sistema que vai produzir os dados que sera manipulado e encaminhado para apache kafka. Apache kafka funciona no formato um ***cluster***, ou seja, voce tem diversas maquinas rodando o pache kafka, e cada maquina dessa e chamada de ***broker***.
 
 O kafka e um cluster com diversos ***brokers***, e cada ***brokers*** tem seu proprio banco de dados.
 
@@ -39,6 +39,32 @@ Quando e enviado uma mensagem, essa mensagem vai para a particao ***Sales***, a 
 
 ![key](img/key.png)
 
-
+Log compactado consegue pegar resumo da posicao atual que esta a mensagem.
 
 ![compacted](img/compacted.png)
+
+<br />
+
+### Particoes distribuidas e Producers
+
+As particoes trabalham de forma distribuida entre os brokes do apache kafka.
+
+Temos dois topicos, um chamado de **Sales** outro de **Clients**. Nota-se que independente dos topicos, o kafka ira tentar distribuir as suas particoes entre os brokers.
+
+Uma coisa que fica muita clara, e que se o **Broker B** cair, ainda sim teremos os dados da particao 2 e 3 disponiveis, pois se encontram tambem em outros brokers.
+
+![particoes](img/distribuicoes_partitions.png)
+
+O que garante essa distribuicao de dados replicados em os Brokers, e chamado de ***Replication Factory***.
+
+O replication factory ajuda a garantir que tenham replicas de uma particao em outros brokers tambem.
+
+![replication](img/replication_factory.png)
+
+O processo de entrega das mensagens, por padrao o kafka nao gera uma regra principal para entregar as mensagens em cada particao.
+
+Imaginemos o seguinte caso, foi enviado uma mensagem, porem essa mensagem nao tem ***key***, a mensagem entao ira cair em **Topic**, depois em partion. O que tem que se atentar e que cada mensagem que e enviada, ela ira parar em particoes diferentes, sobre isso nao se tem controle, apenas as que nao tem uma ***key***, pois se uma mensagem tiver uma ***key***, ela sempre estara na mesma particao, e nao espalhada. 
+
+OBS: Se numca tiver a chave "key", numca sabera qual mensagem que chegou primeiro.
+
+![delivery](img/delivery.png)
