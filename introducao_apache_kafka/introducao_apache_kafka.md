@@ -68,3 +68,19 @@ Imaginemos o seguinte caso, foi enviado uma mensagem, porem essa mensagem nao te
 OBS: Se numca tiver a chave "key", numca sabera qual mensagem que chegou primeiro.
 
 ![delivery](img/delivery.png)
+
+### Partition leadership - Quais sao as particoes que sao lideres dos brokers
+
+Quando temos o replication factory, uma de nossas particoes sera conciderada lider. As particoes que estao em azul, serao as lideres, as que estao em branco, serao as follows. Isto siquinifca que apesar de ter a particao (A), e ter replicas da particao (A) na particao (B), isto significa que no topic azul eu tenho uma replica. Isso significa toda vez que alguem estiver consumindo uma mensagem, ela sempre vai consumir do lider primeiro, o inverso so ira acontecer se broker (A) cair.
+
+![partition leader](img/partition_leadership.png)
+
+### Producer
+
+No processo de entrega da mensagem, na sua cricao, sera especificado ***Topic***, ***Key***, ***Value***. Apartir disso sera feito um ***send()*** (envio), depois kafka ira tentar adequar o formato correto que ele ira serializar, depois ele ira escolher em qual particao essa mensagem sera gravada, depois ira gravar a mensagem em uma ***broker*** (particao).
+
+![processo producer](img/producer_process.png)
+
+O kafka ele quer ter garantias de entrega dessas mensagens que serao enviadas. Para isso existem 3 formatos de entrega.
+
+![formato entrega](img/guarantees.png)
