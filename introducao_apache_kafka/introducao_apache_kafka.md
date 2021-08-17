@@ -101,3 +101,20 @@ O kafka ele quer ter garantias de entrega dessas mensagens que serao enviadas. P
   - Nesse caso a garantia de entrega da mensagem e total, porem exige um maior tempo de processamento.
 
 ![formato entrega](img/guarantees.png)
+
+Existe outro esquema na hora da entrega, eles sao divididos em tres:
+
+ - At most once
+   - Esquema de entrega de mensagem em que pode se perder uma ou outra mensagem, aqui tera uma super performase, mas eventualmente, nao a problema se ouver perde de algumas mensagens.
+ - At least once
+    - Esse e o mais usado, ele garante que as mensagens sejam entregues pelo aumenos uma vez. 
+ - Exacly once
+    - Tem a pior performase, entre tanto, o kafka garante que a mensagem sera entrege ao menos uma vez, ele nao vai perder nenhuma mensagem e nao vai mandar a mais.
+
+### Idempotent producers
+
+Se setar que os idempotent como ***OFF***, tera como duplicar uma mensagem.
+
+Caso seja ***ON***, ele ira descartar a mensagem duplicada.
+
+![idepotent](img/idepotent.png)
