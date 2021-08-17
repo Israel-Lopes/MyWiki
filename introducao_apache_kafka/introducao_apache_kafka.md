@@ -81,6 +81,23 @@ No processo de entrega da mensagem, na sua cricao, sera especificado ***Topic***
 
 ![processo producer](img/producer_process.png)
 
+### Tres formatos de entrega do kafka
+
 O kafka ele quer ter garantias de entrega dessas mensagens que serao enviadas. Para isso existem 3 formatos de entrega.
+
+- ACK 0
+   - Existem alguns casos, em que pode perder mensagens. O kafka ele tem algo chamado ***acknowledgment*** (ACK), isso e para garantir que a resposta do kafka foi entregue, e muito semelhenta ao protocolo de resposta ***tcp/ip***.
+   ACK 0 significa que nao ira espera se o kafka conseguiu gravar a mensagem no broker.
+   
+   - Esse tipo de processo e mais rapido, pois o kafka nao perde tempo respondendo que recebeu a mensagem, com isso ele pode receber mais mensagem para gravar.
+- ACK 1
+   - No segundo caso, sera enviado a mensagem ao kafka de confirmacao de envio. Assim o broker (A) ira responder a mensagem confirmando que a recebeu.
+   
+   - Nessa abordagem, eu tenho uma garantia que a mensagem foi entregue.
+
+- ACK -1
+  - Existem casos, em que voce quer ter uma garantia muito grande de entrega, a mensagem sera enviado para broker (A), e o broker(A) ira replicar no broker(B) e no (C) de acordo com ***replication factory***, quando broker (B) e (C) retornar a mensagem para broker (A) que a mensagem foi replicada, ai sim o broker(A), retorna para producer a confirmacao de gravacao da mensagem.
+  
+  - Nesse caso a garantia de entrega da mensagem e total, porem exige um maior tempo de processamento.
 
 ![formato entrega](img/guarantees.png)
