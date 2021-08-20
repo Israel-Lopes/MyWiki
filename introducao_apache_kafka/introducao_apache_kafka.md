@@ -118,3 +118,81 @@ Se setar que os idempotent como ***OFF***, tera como duplicar uma mensagem.
 Caso seja ***ON***, ele ira descartar a mensagem duplicada.
 
 ![idepotent](img/idepotent.png)
+
+### Consumer
+
+Consumers sao os respodensaveis para ler as mesangens, consumer pode ser qual quer programa, basta que ele leia as mensagens para ser um consumer.
+
+![consumer](img/consumer_one.png)
+
+No outro caso, temos o consumer group. Aqui sao mais de um consumidor no mesmo grupo. Lenbrando que o consumer pode ler de diversas particoes diferentes, porem isso consome mais tempo. 
+
+Para se extrair o maximo de proveito do kafka, vale ter para o mesmo numero de particoes o mesmo numero de consumer
+
+![consumer group](img/consumer_group.png)
+
+### Consumer rebalances
+
+Imagine o seguinte senario, por alguma problema na maquina ela cai, o kafka sabe na hora que esse consumer parou de responder, nisso ele rebalanceia para garantir que nenhuma ***partition*** fique apontanto para consumer que esta off.
+
+![rebalances](img/rebalances.png)
+
+### Security
+
+O kafka tambem pode trabalhar coom processo de incriptacao de mensagens, isso significa que quando eu mando uma mensagem, do producer ate o kafka, essa mensagem seja criptografada, e possivel tambem que a mensagem do broker ate o consumer seja criptografada, mas quando a mensagem for gravada no broker, ela nao e gravada criptografada.
+
+OBS: kafka so criptografa a mensagem no processo de transmicao e nao na gravacao dela. O kafka cconsegue trabalhar tanto com autenticacao e autorizacao.
+
+### Kafka Connect
+
+Basicamente o que o kafka connect faz e jogar informacoes de um lugar e jogar para outro.
+
+A ideia do kafka connect, e que ele tem diversos connectores, e esses conectores conseguem pegar os dados, por exemplo, vindo do twiter, do twiter para um topico.
+
+OBS: O kafka connect nao e o kafka.
+
+![kafka connect](img/kafka_connect.png)
+
+### Connector Sink
+
+Ao inves de pegar de um datasorce e jogar em um topico, eu consigor pegar de um topico e jogar em uma outra fonte de dados.
+
+### Kafka REST Proxy
+
+Ele permite que a aplicacao faca request HTTP, essa request vai cair no REST Proxy do kafka, esse REST Proxy vai jogar a mensagem para kafka.
+
+![rest proxy](img/rest_proxy.png)
+
+### Data compatibilty
+
+Agrande sacagem desses sistemas de mensagem, e que eles conseguem mandar mensagens de um lado para outro. Mando uma mensagem de um produtor para kafka, e um consumidor le essa mensagem. O ponto e, qual o padrao dessa mensagem?
+
+Sempre que e enviado uma mensagem, tem um serializer, ele ira serializar essa mensagem no padrao que voce vai mandar, em seguida ira enviada a mensagem para o topico. O grande ponto nesse caso do Data compatibility, ira ter um ***Schema Registry***.
+
+***Schema Registry*** e o padrao da mensagem que sera enviada, cada schema tem um ***id***, o ***Consumer*** ira ler a mensagem, mas para isso ele vai la no ***Schema Registry*** e vai pegar dados do schema 123, quando o ***Consumer*** recebe, ele vai dizer, a mensagem esta nesse padrao.
+
+Entao com ***Schema Registry***, voce consegue registrar o padrao em que as mensagens sao enviadas e recebidas. Entao eu nao consigo nem enviar uma mensagem que nao esta seguindo o padrao do ***Schema Registry***.
+
+![data compatibilty](img/data_compatibility.png)
+
+O kafka permite enviar mensagens em diversos padroes, porem existem os mais comuns.
+
+O apache avro e um json que leva ***namespace, type, name, filds e os types do filds***.
+
+Outro protocolo utilizado e Protobuffer, e aparecido com Apache AVRO so que mais simples.
+
+![apache avro](img/apache_avro.png)
+
+### Kafka Streams
+
+O Streams tambem faz parte do ecossistema do kafka, basicamente e uma biblioteca feita em java. Ele e uma biblioteca que trabalho com realtime e ele ajuda a processar e transformar dados. 
+
+![kafka streams](img/kafka_streams.png)
+
+### Confluent ksqlDB
+
+Ja pensou na possibilidade de poder rodar comandos SQL nas filas, e exatamente isso que ksqlDB faz.
+
+Exemplo disso e que toda vez que eu der fizer SELECT no products, eu posso pegar a media dos precos.
+
+![ksdldb](img/ksqldb.png)
