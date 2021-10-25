@@ -4,6 +4,8 @@
 
 ## Criando back-end com json-server
 
+Para poder renderizar os diagramas feitos em mermaid, instale o [plugin](https://chrome.google.com/webstore/detail/github-%2B-mermaid/goiiopgdnkogdbjmncgedmgpoajilohe/related?hl=en).
+
 Json-serve e uma biblioteca que simula uma API REST com json.
 
 ```
@@ -171,14 +173,75 @@ Dentro do arquivo app.module.ts, tem a definição do bootstrap que aponta a def
 
 Dentro da pasta environments, temos os arquivos que são delclados as variaveis de ambiente.
 
+Fazendo teste de um novo componente.
+Dentro do arquivo app.componente.ts, adicione um novo componente
 
+```templateUrl: 'app.componet.html'```
 
+![app-component](img/app-component.png)
 
+Adicione tambem em export ```nome = maria;```
 
+![export-nome](img/export-nome.png)
 
+Dentro da pasta app, crie o arquivo app.componet.html
 
+Dentro do arquivo app.component.html, adcione a seguinte linha:
 
+```
+<h1>Componente APP</h1>
+<h2>Olá {{ nome }}, você está bem?</h2>
+```
 
+Com a utilização do double mustache e possivel interpolar variaveis.
+
+```
+{{ double mustache }}
+```
+
+Resultado podera ser visto em localhost:4200
+
+![resultado-maria](img/resultado-maria.png)
+
+## Instalando pacote do Material designer
+
+No terminal digite:
+
+```
+ng add @angular/material
+```
+Ele tem varios componentes interesantes que seguem o padrao de designer feito pela Google.
+
+### Gerando um component
+
+```
+ng g c components/template/header
+```
+ - g, generate
+ - c, component
+
+Automaticamente ele ira criar nosso componente e registrar dentro do nosso modulo.
+
+Dentro do arquivo app.component.html, remova a seguinte linha:
+
+```
+<h1>Componente APP</h1>
+<h2>Olá {{ nome }}, você está bem?</h2>
+```
+
+Adicione agora:
+
+```
+<app-header></app-header>
+```
+
+Com isso sera renderizado o novo component.
+
+### Importando novo modulo
+
+![novo-modulo](img/novo-modulo.png)
+
+Na linha 9 o modulo do material esta sendo importado, por seguinte na 20, ele esta sendo declarado dentro dos imports.
 
 
 
