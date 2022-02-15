@@ -36,6 +36,11 @@ public class ApplicationStart {
  - @EnableAutoConfiguration autoconfigura nossa aplicação criando um bean, apenas com isso ja e possivel inicializar a aplicação.
  - ComponentScan, faz o springboot fazer scaner em outros pacotes. Essa anotação so e utilizada caso o ***AplicationStart*** nao esteja no diretorio padrao do spring.
 
+Outra forma de fazer autoconfiguration e utilizando apenas essa anotação:
+```
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+```
+
 ## Criando Controller com endpoint
 
 Crie a pasta controller, dentro dela crie o arquivo animeController
@@ -201,12 +206,23 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql//localhost:3306/anime?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/anime?createDatabaseIfNotExist=true
     username: root
     password: root
   jpa:
     hibernate:
       ddl-auto: update
+```
+
+Caso nao funcione, pode ser feito dessa forma tambem, crie o arquivo aplication.properties e colo que dentro:
+
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/news?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform = org.hibernate.dialect.MySQL5Dialect
+spring.jpa.generate-ddl=true
 ```
 
 Agora devemos transformar nosso dominio em uma entidade do banco. 
