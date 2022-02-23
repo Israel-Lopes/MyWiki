@@ -345,6 +345,33 @@ public class CalculoValorLocacaoTest {
 }
 ```
 
+### Suite de testes
 
+Primeiramente para utilizar o suite, deve se criar uma classe propria para ele, pois e nele que sera chamado os demais testes.
 
-18
+No ***@RunWith(Suite.class)*** dizemos ao JUnit que nosso teste sera inicializado como suite.
+
+Na anotação ***@SuiteClass({})***, e definido todos os testes que serao executados por essa suite. Dentro dele sera colocado todos as classes que devem ser testadas.
+
+```
+@RunWith(Suite.class)
+@SuiteClass({
+    CalculadoraTest.class,
+    CalculoValorLocacao.class,
+    LocacaoServiceTest.class
+})
+public class SuiteExecucao {
+
+}
+```
+
+### InjectMocks
+
+Com a anotação ***@InjectMocks***, ela cria uma instancia da classe e injeta os mocks que sao criados com anotação ***@Mock*** ou nessa instancia ***@Spy***. E para isso, deve se usar tambem ***@RunWith(MockitoJunitRunner.class)*** ou ***Mockito.initMocks(this)*** para inicializar esses mocks e injetalos.
+
+### Spy
+
+A anotação @Spy e semelhante a @Mock porem no inverso. 
+Mock ele retorna o valor padrão, ja o Spy e ele retorna a execução do metodo.
+
+OBS: @Spy nao funciona com interface, apenas com classes concretas.
