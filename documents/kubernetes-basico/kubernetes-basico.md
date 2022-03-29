@@ -80,19 +80,19 @@ Deployment
 
 ```
 Deployment
-._________________________________________________________.
-| ReplicaSet                                              |
-| ._____________________________________________________. |
-| |                                                     | |
-| |  POD                         POD                    | |
-| |  .________________.          .________________.     | |  ._________.
-| |  |                |          |                |     | |  |         |
-| |  |   |Container|  |          |   |Container|  |     | |  | Service |
-| |  |________________|          |________________|     | |  |_________|
-| |                                                     | |
-| |                                                     | |
-| |_____________________________________________________| |
-|_________________________________________________________|
+._____________________________________________________.
+| ReplicaSet                                          |
+| ._________________________________________________. |
+| |                                                 | |
+| |  POD                         POD                | |
+| |  .________________.          .________________. | |     ._________.
+| |  |                |          |                | | |     |         |
+| |  |   |Container|  |          |   |Container|  | | | --> | Service |
+| |  |________________|          |________________| | |     |_________|
+| |                                                 | |
+| |                                                 | |
+| |_________________________________________________| |
+|_____________________________________________________|
 ```
 
 O service ele possibilita que outras pessoas ou sistemas acessem o deployment, conseguentemente acesso aos PODs. Ele fica de forma externa em relação a o deployment.
@@ -109,6 +109,139 @@ Utilizando o service, existe algumas possibilidades:
  - Gerar um ip externo, para acesso externo.
  - Disponibilizar uma porta.
 
+***Round-robin*** e um algoritimo de randomização que trabalha em conjunto com service.
 
+## Rodando kubernetes local com kind
 
+O kind simula um cluster kubernetes utilizando o docker da maquina local.
 
+Para criar cluster com klind:
+
+``klind create cluster --name=meuprimeirocluster``
+
+Mostra os nodes:
+
+``kubectl get nodes``
+
+Mostra os pods:
+
+``kubectl get pods``
+
+Mostra os services:
+
+``kubectl get services``
+
+Crie agora o arquivo ***server.go***, dentro dele digite:
+
+```
+package main
+
+func main() {
+
+    http.HandleFunc("/", Home)
+    http.ListenAndServe(":3000", nil)
+}
+
+func Home(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("<h1>Ola mundo!</h1>"))
+}
+```
+
+Agora para rodar:
+
+``go run server.go``
+
+Fazendo curl na porta 3000 podera ver que retorna um "Ola mundo!".
+
+``curl localhost:3000``
+
+Agora que testamos temos que ir para proximo passo que e criar docker file. Para isso crie um arquivo docker chamado ***Dockerfile*** e insira dentro dele o seguinte:
+
+```
+FROM golang:1.15
+WORKDIR /go/src/testekubernetes
+COPY . .
+RUN GOOS=linux go build ldflags="-s -w"
+CMD ["./testekubernetes"]
+```
+
+Nesse script esta criando uma imagem docker, esta tambem copiando os arquivos que estao para dentro do container, esta gerando build do executavel server.go e rodando o executavel Go para rodar o servidor.
+
+Proximo passo agora e gerar um docker build dessa imagem:
+
+``docker build -t <caminho-do-diretorio-do-projeto>``
+
+Agora vamos subir:
+
+``docker run -p 3000:3000 <caminho-do-diretorio-do-projeto:latest>``
+
+## Como fazer deploy de uma aplicacao
+
+Para fazer deploy de uma aplicacao para docker-hub basta fazer:
+
+``docker push <nome-da-imagem>``
+
+Dessa forma a sua imagem ira subir para docker-hub.
+
+## Criando Deployment
+
+Para criar o nosso deployment, crie um arquivo chamado ***deployment.yaml*** dentro de uma pasta chamada k8s. 
+
+Agora insira as seguintes linhas:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: goserver
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: server
+    template:
+        metadata:
+            labels:
+                app: server
+        spec:
+            containers:
+                - name: goserver
+                  image: <nome-da-imagem>
+                  ports:
+                    - containerPort: 3000
+```
+
+Agora vamos rodar:
+
+``kubectl apply -f deployment.yml``
+
+Agora se voce fizer kubectl get pods, podera ver que ele criou um pod.
+
+``kubectl get pods``
+
+Agora vamos criar o service, basta criar arquivo service.yaml e por dentro dele:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+    name: goserve-service
+spec:
+    type: ClusterIP
+    ports:
+        - protocol: TCP
+          name: http-svc
+          port: 3000
+    selector:
+        app: serve
+```
+
+Agora vamos iniciar ele para criar o service:
+
+``kubectl apply -f service.yaml``
+
+## Apontamento de porta
+
+``kubectl port-foward service/goserver-service 3000:3000``
+
+Dessa forma estamos dizendo que quando for acessada a port 3000 da maquina redirecione para port 3000 do goserver.
